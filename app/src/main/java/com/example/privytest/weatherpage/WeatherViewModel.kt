@@ -26,29 +26,47 @@ class WeatherViewModel @Inject constructor(
 
 
     val listWeather = MutableLiveData<NetworkResult<WeatherResponse>>()
-    val cloudsWeather = MutableLiveData<List<WeatherModel>>()
-    val rainWeather = MutableLiveData<List<WeatherModel>>()
-    val clearWeather = MutableLiveData<List<WeatherModel>>()
-    val snowWeather = MutableLiveData<List<WeatherModel>>()
+    val cloudsWeather = MutableLiveData<Map<String, WeatherModel>>()
+    val rainWeather = MutableLiveData<Map<String, WeatherModel>>()
+    val clearWeather = MutableLiveData<Map<String, WeatherModel>>()
+    val snowWeather = MutableLiveData<Map<String, WeatherModel>>()
+
+
+    val listCity = listOf<String>(
+        "4899170",
+        "6244895",
+        "2661039",
+        "5879092",
+        "6198431",
+        "5780908",
+        "5781070",
+        "792680",
+        "2662148",
+        "4350049",
+    )
+
+
 
 
     fun getForecastWeather() = viewModelScope.launch {
 
+        val mapOfClouds = mutableMapOf<String, WeatherModel>()
+        val mapOfRain = mutableMapOf<String, WeatherModel>()
+        val mapOfClear = mutableMapOf<String, WeatherModel>()
+        val mapOfSnow = mutableMapOf<String, WeatherModel>()
 
-        val listOfClouds = mutableListOf<WeatherModel>()
-        val listOfRain = mutableListOf<WeatherModel>()
-        val listOfClear = mutableListOf<WeatherModel>()
-        val listOfSnow = mutableListOf<WeatherModel>()
 
-
-        repository.getForecastWeather("4899170", Constant.APPID)
-            .collect{ value ->
+        for(item in listCity){
+            repository.getForecastWeather(item, Constant.APPID).collect{ value ->
                 value.data?.listWeather?.map { weatherEntity ->
 
                     val dataWeather = weatherEntity.dataWeather.first()
-                    if(dataWeather.main == "clouds") {
-                        listOfClouds.add(
-                            WeatherModel(
+                    if(dataWeather.main.equals("clouds", true)) {
+                        if(mapOfClouds.containsKey(value.data.city.id.toString()))
+                        {
+                            mapOfClouds[value.data.city.id.toString()]?.count = mapOfClouds[value.data.city.id.toString()]?.count!! + 1
+                        } else{
+                            mapOfClouds[value.data.city.id.toString()] = WeatherModel(
                                 cityName = value.data.city.name,
                                 cityId = value.data.city.id.toString(),
                                 main = dataWeather.main,
@@ -57,10 +75,14 @@ class WeatherViewModel @Inject constructor(
                                 maxTemp = weatherEntity.mainWeather.tempMax.toString(),
                                 minTemp = weatherEntity.mainWeather.tempMin.toString()
                             )
-                        )
-                    } else if (dataWeather.main == "rain") {
-                        listOfRain.add(
-                            WeatherModel(
+                        }
+
+                    } else if (dataWeather.main.equals("rain", true)) {
+
+                        if(mapOfRain.containsKey(value.data.city.id.toString())) {
+                            mapOfRain[value.data.city.id.toString()]?.count = mapOfRain[value.data.city.id.toString()]?.count!! + 1
+                        } else {
+                            mapOfRain[value.data.city.id.toString()] = WeatherModel(
                                 cityName = value.data.city.name,
                                 cityId = value.data.city.id.toString(),
                                 main = dataWeather.main,
@@ -69,10 +91,14 @@ class WeatherViewModel @Inject constructor(
                                 maxTemp = weatherEntity.mainWeather.tempMax.toString(),
                                 minTemp = weatherEntity.mainWeather.tempMin.toString()
                             )
-                        )
-                    } else if(dataWeather.main == "snow") {
-                        listOfSnow.add(
-                            WeatherModel(
+                        }
+
+                    } else if(dataWeather.main.equals("snow", true)) {
+
+                        if(mapOfSnow.containsKey(value.data.city.id.toString())) {
+                            mapOfSnow[value.data.city.id.toString()]?.count = mapOfSnow[value.data.city.id.toString()]?.count!! + 1
+                        } else {
+                            mapOfSnow[value.data.city.id.toString()] = WeatherModel(
                                 cityName = value.data.city.name,
                                 cityId = value.data.city.id.toString(),
                                 main = dataWeather.main,
@@ -81,10 +107,13 @@ class WeatherViewModel @Inject constructor(
                                 maxTemp = weatherEntity.mainWeather.tempMax.toString(),
                                 minTemp = weatherEntity.mainWeather.tempMin.toString()
                             )
-                        )
-                    } else {
-                        listOfClear.add(
-                            WeatherModel(
+                        }
+
+                    } else if(dataWeather.main.equals("clear", true)){
+                        if(mapOfClear.containsKey(value.data.city.id.toString())) {
+                            mapOfClear[value.data.city.id.toString()]?.count = mapOfClear[value.data.city.id.toString()]?.count!! + 1
+                        } else {
+                            mapOfClear[value.data.city.id.toString()] = WeatherModel(
                                 cityName = value.data.city.name,
                                 cityId = value.data.city.id.toString(),
                                 main = dataWeather.main,
@@ -93,20 +122,19 @@ class WeatherViewModel @Inject constructor(
                                 maxTemp = weatherEntity.mainWeather.tempMax.toString(),
                                 minTemp = weatherEntity.mainWeather.tempMin.toString()
                             )
-                        )
+                        }
                     }
                 }
-                rainWeather.postValue(listOfRain)
-                cloudsWeather.postValue(listOfClouds)
-                clearWeather.postValue(listOfClear)
-                snowWeather.postValue(listOfSnow)
+                rainWeather.postValue(mapOfRain)
+                cloudsWeather.postValue(mapOfClouds)
+                clearWeather.postValue(mapOfClear)
+                snowWeather.postValue(mapOfSnow)
+                println("valuenya ${value.data?.listWeather?.size}")
 
             }
+        }
+
     }
-
-
-
-
 
 
 }

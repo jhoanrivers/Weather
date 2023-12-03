@@ -6,45 +6,50 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.privytest.R
 import com.example.privytest.databinding.FragmentRainBinding
+import com.example.privytest.weatherpage.ViewPagerAdapter
 import com.example.privytest.weatherpage.WeatherViewModel
+import com.example.privytest.weatherpage.adapter.WeatherAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RainFragment : Fragment() {
 
 
-    lateinit var viewModel: WeatherViewModel
+    lateinit var wViewModel: WeatherViewModel
     lateinit var binding : FragmentRainBinding
-
+    lateinit var weatherAdapter: WeatherAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentRainBinding.inflate(inflater, container, false)
-
+        weatherAdapter = WeatherAdapter()
         val view = binding.root
         initViewModel()
-        initView()
         bindViewModel()
+        initView()
         return view
     }
-
     private fun initViewModel(){
-        viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
+        wViewModel = ViewModelProvider(requireActivity())[WeatherViewModel::class.java]
     }
 
     private fun initView() {
         binding.rvRain.apply {
-
+            adapter = weatherAdapter
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            itemAnimator = null
         }
     }
 
     private fun bindViewModel() {
-        viewModel.rainWeather.observe(viewLifecycleOwner){
 
+        wViewModel.rainWeather.observe(viewLifecycleOwner){
+            weatherAdapter.updateAdapter(it.values.toList())
         }
 
     }

@@ -2,6 +2,7 @@ package com.example.privytest.weatherpage
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.privytest.R
@@ -10,6 +11,7 @@ import com.example.privytest.weatherpage.fragment.ClearFragment
 import com.example.privytest.weatherpage.fragment.CloudsFragment
 import com.example.privytest.weatherpage.fragment.RainFragment
 import com.example.privytest.weatherpage.fragment.SnowFragment
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         setupViewModel()
         initViews()
+        bindViewModel()
 
     }
 
@@ -50,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
            when(position) {
                0 -> tab.text = "Clear"
-               1 -> tab.text = "Coulds"
+               1 -> tab.text = "Clouds"
                2 -> tab.text = "Rain"
                3 -> tab.text = "Snow"
            }
@@ -58,5 +61,14 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.getForecastWeather()
     }
+
+
+    private fun bindViewModel() {
+        viewModel.rainWeather.observe(this){
+            println("it works from activty")
+        }
+    }
+
+
 
 }
