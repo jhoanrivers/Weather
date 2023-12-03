@@ -9,7 +9,7 @@ data class WeatherEntity(
 
 
     @SerializedName("weather")
-    val dataWeather: DataWeatherEntity
+    val dataWeather: List<DataWeatherEntity>
 
 
 )
