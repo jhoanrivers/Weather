@@ -1,42 +1,49 @@
 package com.example.privytest.weatherpage.adapter
 
+import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.bumptech.glide.Glide
+import com.example.privytest.R
+import com.example.privytest.Utils.Utils
+import com.example.privytest.Utils.Utils.decimalFormat
+import com.example.privytest.Utils.Utils.sortDescCountAscName
 import com.example.privytest.databinding.ItemWeatherBinding
 import com.example.privytest.weatherpage.model.WeatherModel
 
-class WeatherAdapter() : RecyclerView.Adapter<WeatherAdapter.ViewHolder>(){
+class WeatherAdapter(private val context: Context) :
+    RecyclerView.Adapter<WeatherAdapter.ViewHolder>() {
 
 
     var listWeather: List<WeatherModel> = mutableListOf()
 
     val degreesSymbol = "\u00B0"
 
-    open fun updateAdapter(listWeather: List<WeatherModel>){
-        this.listWeather = listWeather
+    open fun updateAdapter(weathers: List<WeatherModel>) {
+        val sortDescCount = sortDescCountAscName(weathers)
+        this.listWeather = sortDescCount
         notifyDataSetChanged()
     }
 
-
-    class ViewHolder (private val binding: ItemWeatherBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(private val binding: ItemWeatherBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(weather: WeatherModel) {
             binding.tvCount.text = weather.count.toString()
             binding.tvCity.text = weather.cityName
-            binding.maxTemp.text = weather.maxTemp
-            binding.tvMinTemp.text = weather.minTemp
-            binding.tvCurrentTemp.text = weather.currentTemp
-
-            Glide.with(binding.imgIcon.context)
-                .load(Uri.parse("https://openweathermap.org/img/wn/${weather.icon}@4x.png"))
-                .into(binding.imgIcon)
-
+            binding.maxTemp.text = convertToCelsius(weather.maxTemp.toDouble())
+            binding.tvMinTemp.text = convertToCelsius(weather.minTemp.toDouble())
+            binding.tvCurrentTemp.text = convertToCelsius(weather.currentTemp.toDouble())
         }
 
+    }
+
+
+    fun convertToCelsius(kelvin: Double): String {
+        return "${decimalFormat.format(kelvin - 273.15)}$degreesSymbol C"
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

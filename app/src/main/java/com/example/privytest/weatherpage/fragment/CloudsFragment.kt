@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.privytest.R
-import com.example.privytest.databinding.FragmentCloudsBinding
-import com.example.privytest.databinding.FragmentRainBinding
+import com.example.privytest.databinding.FragmentWeatherBinding
 import com.example.privytest.weatherpage.WeatherViewModel
 import com.example.privytest.weatherpage.adapter.WeatherAdapter
 
@@ -17,16 +16,16 @@ class CloudsFragment : Fragment() {
 
 
     lateinit var wViewModel: WeatherViewModel
-    lateinit var binding : FragmentCloudsBinding
+    lateinit var binding : FragmentWeatherBinding
     lateinit var weatherAdapter: WeatherAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentCloudsBinding.inflate(inflater, container, false)
+        binding = FragmentWeatherBinding.inflate(inflater, container, false)
         val view = binding.root
-        weatherAdapter = WeatherAdapter()
+        weatherAdapter = WeatherAdapter(requireContext())
 
         initViewModel()
         bindViewModel()
@@ -41,7 +40,7 @@ class CloudsFragment : Fragment() {
     }
 
     private fun initView() {
-        binding.rvClouds.apply {
+        binding.rvWeather.apply {
             adapter = weatherAdapter
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             itemAnimator = null
@@ -53,6 +52,17 @@ class CloudsFragment : Fragment() {
         wViewModel.cloudsWeather.observe(viewLifecycleOwner){
             weatherAdapter.updateAdapter(it.values.toList())
         }
+
+        wViewModel.loadingData.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.pbWeather.visibility = View.VISIBLE
+                binding.rvWeather.visibility = View.GONE
+            } else {
+                binding.pbWeather.visibility = View.GONE
+                binding.rvWeather.visibility = View.VISIBLE
+            }
+        }
+
 
     }
 

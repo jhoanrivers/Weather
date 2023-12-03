@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setupViewModel()
         initViews()
         bindViewModel()
@@ -47,7 +46,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-
         val adapter = ViewPagerAdapter(this, fragments)
         binding.viewPager.adapter = adapter
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
@@ -60,13 +58,12 @@ class MainActivity : AppCompatActivity() {
         }.attach()
 
         viewModel.getForecastWeather()
+
     }
 
 
     private fun bindViewModel() {
-        viewModel.rainWeather.observe(this){
-            println("it works from activty")
-        }
+
     }
 
 

@@ -30,9 +30,10 @@ class WeatherViewModel @Inject constructor(
     val rainWeather = MutableLiveData<Map<String, WeatherModel>>()
     val clearWeather = MutableLiveData<Map<String, WeatherModel>>()
     val snowWeather = MutableLiveData<Map<String, WeatherModel>>()
+    val loadingData = MutableLiveData<Boolean>()
 
 
-    val listCity = listOf<String>(
+    val listCity = listOf(
         "4899170",
         "6244895",
         "2661039",
@@ -46,16 +47,14 @@ class WeatherViewModel @Inject constructor(
     )
 
 
+    private val mapOfClouds = mutableMapOf<String, WeatherModel>()
+    private val mapOfRain = mutableMapOf<String, WeatherModel>()
+    private val mapOfClear = mutableMapOf<String, WeatherModel>()
+    private val mapOfSnow = mutableMapOf<String, WeatherModel>()
 
 
     fun getForecastWeather() = viewModelScope.launch {
-
-        val mapOfClouds = mutableMapOf<String, WeatherModel>()
-        val mapOfRain = mutableMapOf<String, WeatherModel>()
-        val mapOfClear = mutableMapOf<String, WeatherModel>()
-        val mapOfSnow = mutableMapOf<String, WeatherModel>()
-
-
+        loadingData.postValue(true)
         for(item in listCity){
             repository.getForecastWeather(item, Constant.APPID).collect{ value ->
                 value.data?.listWeather?.map { weatherEntity ->
@@ -125,15 +124,13 @@ class WeatherViewModel @Inject constructor(
                         }
                     }
                 }
-                rainWeather.postValue(mapOfRain)
-                cloudsWeather.postValue(mapOfClouds)
-                clearWeather.postValue(mapOfClear)
-                snowWeather.postValue(mapOfSnow)
-                println("valuenya ${value.data?.listWeather?.size}")
-
             }
         }
-
+        rainWeather.postValue(mapOfRain)
+        cloudsWeather.postValue(mapOfClouds)
+        clearWeather.postValue(mapOfClear)
+        snowWeather.postValue(mapOfSnow)
+        loadingData.postValue(false)
     }
 
 

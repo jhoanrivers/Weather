@@ -32,7 +32,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/margin_16">
 
             <TextView
                 android:id="@+id/tvCity"
@@ -54,7 +55,8 @@
                     android:layout_weight="0.5"
                     android:gravity="start"
                     android:layout_height="wrap_content"
-                    tools:text = "16.31"/>
+                    tools:text = "16.31"
+                    android:maxLines="1"/>
 
                 <TextView
                     android:id="@+id/maxTemp"
@@ -62,7 +64,8 @@
                     android:layout_weight="1"
                     android:gravity="end"
                     android:layout_height="wrap_content"
-                    tools:text="29"/>
+                    tools:text="29"
+                    android:maxLines="1"/>
 
             </LinearLayout>
 

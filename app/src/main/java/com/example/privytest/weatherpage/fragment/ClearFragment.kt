@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.privytest.R
-import com.example.privytest.databinding.FragmentClearBinding
+import com.example.privytest.databinding.FragmentWeatherBinding
 import com.example.privytest.weatherpage.WeatherViewModel
 import com.example.privytest.weatherpage.adapter.WeatherAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +17,7 @@ class ClearFragment : Fragment() {
 
 
     lateinit var viewModel: WeatherViewModel
-    lateinit var binding: FragmentClearBinding
+    lateinit var binding: FragmentWeatherBinding
     lateinit var weatherAdapter: WeatherAdapter
 
     override fun onCreateView(
@@ -26,8 +25,8 @@ class ClearFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentClearBinding.inflate(inflater, container, false)
-        weatherAdapter = WeatherAdapter()
+        binding = FragmentWeatherBinding.inflate(inflater, container, false)
+        weatherAdapter = WeatherAdapter(requireContext())
         val view = binding.root
 
         initViewModel()
@@ -37,15 +36,27 @@ class ClearFragment : Fragment() {
     }
 
     private fun bindViewModel() {
-        viewModel.clearWeather.observe(viewLifecycleOwner){
+        viewModel.clearWeather.observe(viewLifecycleOwner) {
             weatherAdapter.updateAdapter(it.values.toList())
         }
+        viewModel.loadingData.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.pbWeather.visibility = View.VISIBLE
+                binding.rvWeather.visibility = View.GONE
+            } else {
+                binding.pbWeather.visibility = View.GONE
+                binding.rvWeather.visibility = View.VISIBLE
+            }
+        }
+
+
     }
 
     private fun initView() {
-        binding.rvClear.apply {
+        binding.rvWeather.apply {
             adapter = weatherAdapter
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             itemAnimator = null
         }
     }
