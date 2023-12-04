@@ -1,4 +1,4 @@
-package com.example.privytest.entity
+package com.example.privytest.data.entity
 
 import com.google.gson.annotations.SerializedName
 
@@ -15,7 +15,7 @@ data class WeatherResponse(
 
 
     @SerializedName("list")
-    val listWeather:List<WeatherEntity> ,
+    val listWeather:List<WeatherEntity>,
 
 
 

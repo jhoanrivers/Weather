@@ -2,7 +2,9 @@ package com.example.privytest.di.network
 
 import com.example.privytest.Constant
 import com.example.privytest.Constant.Companion.BASE_URL
+import com.example.privytest.data.RemoteDataSource
 import com.example.privytest.repository.Repository
+import com.example.privytest.repository.RepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,6 +55,13 @@ class NetworkModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideRepository(remoteDataSource: RemoteDataSource) : Repository {
+        return RepositoryImpl(remoteDataSource)
     }
 
 }

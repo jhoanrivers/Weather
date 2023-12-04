@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.privytest.Constant
 import com.example.privytest.WeatherApplication
 import com.example.privytest.di.network.NetworkResult
-import com.example.privytest.entity.WeatherEntity
-import com.example.privytest.entity.WeatherResponse
+import com.example.privytest.data.entity.WeatherEntity
+import com.example.privytest.data.entity.WeatherResponse
 import com.example.privytest.repository.Repository
 import com.example.privytest.weatherpage.model.WeatherModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +28,7 @@ class WeatherViewModel @Inject constructor(
 
 
     val listWeather = MutableLiveData<NetworkResult<WeatherResponse>>()
+    val testListWeather = MutableLiveData<WeatherResponse>()
     val cloudsWeather = MutableLiveData<Map<String, WeatherModel>>()
     val rainWeather = MutableLiveData<Map<String, WeatherModel>>()
     val clearWeather = MutableLiveData<Map<String, WeatherModel>>()
@@ -57,16 +58,16 @@ class WeatherViewModel @Inject constructor(
 
     fun getForecastWeather() = viewModelScope.launch {
         loadingData.postValue(true)
-        for(item in listCity){
-            repository.getForecastWeather(item, Constant.APPID).collect{ value ->
+        for (item in listCity) {
+            repository.getForecastWeather(item, Constant.APPID).collect { value ->
                 value.data?.listWeather?.map { weatherEntity ->
 
                     val dataWeather = weatherEntity.dataWeather.first()
-                    if(dataWeather.main.equals("clouds", true)) {
-                        if(mapOfClouds.containsKey(value.data.city.id.toString()))
-                        {
-                            mapOfClouds[value.data.city.id.toString()]?.count = mapOfClouds[value.data.city.id.toString()]?.count!! + 1
-                        } else{
+                    if (dataWeather.main.equals("clouds", true)) {
+                        if (mapOfClouds.containsKey(value.data.city.id.toString())) {
+                            mapOfClouds[value.data.city.id.toString()]?.count =
+                                mapOfClouds[value.data.city.id.toString()]?.count!! + 1
+                        } else {
                             mapOfClouds[value.data.city.id.toString()] = WeatherModel(
                                 cityName = value.data.city.name,
                                 cityId = value.data.city.id.toString(),
@@ -80,8 +81,9 @@ class WeatherViewModel @Inject constructor(
 
                     } else if (dataWeather.main.equals("rain", true)) {
 
-                        if(mapOfRain.containsKey(value.data.city.id.toString())) {
-                            mapOfRain[value.data.city.id.toString()]?.count = mapOfRain[value.data.city.id.toString()]?.count!! + 1
+                        if (mapOfRain.containsKey(value.data.city.id.toString())) {
+                            mapOfRain[value.data.city.id.toString()]?.count =
+                                mapOfRain[value.data.city.id.toString()]?.count!! + 1
                         } else {
                             mapOfRain[value.data.city.id.toString()] = WeatherModel(
                                 cityName = value.data.city.name,
@@ -94,10 +96,11 @@ class WeatherViewModel @Inject constructor(
                             )
                         }
 
-                    } else if(dataWeather.main.equals("snow", true)) {
+                    } else if (dataWeather.main.equals("snow", true)) {
 
-                        if(mapOfSnow.containsKey(value.data.city.id.toString())) {
-                            mapOfSnow[value.data.city.id.toString()]?.count = mapOfSnow[value.data.city.id.toString()]?.count!! + 1
+                        if (mapOfSnow.containsKey(value.data.city.id.toString())) {
+                            mapOfSnow[value.data.city.id.toString()]?.count =
+                                mapOfSnow[value.data.city.id.toString()]?.count!! + 1
                         } else {
                             mapOfSnow[value.data.city.id.toString()] = WeatherModel(
                                 cityName = value.data.city.name,
@@ -110,9 +113,10 @@ class WeatherViewModel @Inject constructor(
                             )
                         }
 
-                    } else if(dataWeather.main.equals("clear", true)){
-                        if(mapOfClear.containsKey(value.data.city.id.toString())) {
-                            mapOfClear[value.data.city.id.toString()]?.count = mapOfClear[value.data.city.id.toString()]?.count!! + 1
+                    } else if (dataWeather.main.equals("clear", true)) {
+                        if (mapOfClear.containsKey(value.data.city.id.toString())) {
+                            mapOfClear[value.data.city.id.toString()]?.count =
+                                mapOfClear[value.data.city.id.toString()]?.count!! + 1
                         } else {
                             mapOfClear[value.data.city.id.toString()] = WeatherModel(
                                 cityName = value.data.city.name,
@@ -135,5 +139,11 @@ class WeatherViewModel @Inject constructor(
         loadingData.postValue(false)
     }
 
+
+    fun getSampleWeather() : WeatherResponse {
+        val weatherResponse = repository.sampleListWeather()
+        testListWeather.postValue(weatherResponse)
+        return weatherResponse
+    }
 
 }

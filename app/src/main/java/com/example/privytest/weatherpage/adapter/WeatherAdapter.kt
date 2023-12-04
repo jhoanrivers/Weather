@@ -23,7 +23,7 @@ class WeatherAdapter(private val context: Context) :
 
     val degreesSymbol = "\u00B0"
 
-    open fun updateAdapter(weathers: List<WeatherModel>) {
+    fun updateAdapter(weathers: List<WeatherModel>) {
         val sortDescCount = sortDescCountAscName(weathers)
         this.listWeather = sortDescCount
         notifyDataSetChanged()

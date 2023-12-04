@@ -1,4 +1,4 @@
-package com.example.privytest.entity
+package com.example.privytest.data.entity
 
 import com.google.gson.annotations.SerializedName
 
