@@ -13,6 +13,7 @@ import com.example.privytest.Utils.Utils.decimalFormat
 import com.example.privytest.Utils.Utils.sortDescCountAscName
 import com.example.privytest.databinding.ItemWeatherBinding
 import com.example.privytest.weatherpage.model.WeatherModel
+import com.squareup.picasso.Picasso
 
 class WeatherAdapter(private val context: Context) :
     RecyclerView.Adapter<WeatherAdapter.ViewHolder>() {
@@ -37,6 +38,10 @@ class WeatherAdapter(private val context: Context) :
             binding.maxTemp.text = convertToCelsius(weather.maxTemp.toDouble())
             binding.tvMinTemp.text = convertToCelsius(weather.minTemp.toDouble())
             binding.tvCurrentTemp.text = convertToCelsius(weather.currentTemp.toDouble())
+
+
+            val imageUri = "http://openweathermap.org/img/wn/${weather.icon}@2x.png"
+            Glide.with(context).load(imageUri).into(binding.imgIcon)
         }
 
     }

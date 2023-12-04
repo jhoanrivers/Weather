@@ -2,7 +2,7 @@ package com.example.privytest.weatherpage.model
 
 data class WeatherModel(
 
-    var count: Int = 0,
+    var count: Int = 1,
 
     val cityName: String,
 

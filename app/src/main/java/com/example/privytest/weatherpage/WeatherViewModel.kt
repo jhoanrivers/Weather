@@ -1,6 +1,7 @@
 package com.example.privytest.weatherpage
 
 import android.app.Application
+import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,6 +23,7 @@ import javax.inject.Named
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
     private val repository: Repository,
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
 
