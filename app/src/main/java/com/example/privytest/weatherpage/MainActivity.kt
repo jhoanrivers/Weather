@@ -3,9 +3,12 @@ package com.example.privytest.weatherpage
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.privytest.R
+import com.example.privytest.Utils.NetworkEnum
 import com.example.privytest.databinding.ActivityMainBinding
 import com.example.privytest.weatherpage.fragment.ClearFragment
 import com.example.privytest.weatherpage.fragment.CloudsFragment
@@ -14,13 +17,14 @@ import com.example.privytest.weatherpage.fragment.SnowFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
 
-    lateinit var viewModel: WeatherViewModel
+    private val viewModel : WeatherViewModel by viewModels()
     lateinit var binding: ActivityMainBinding
 
     private val fragments : List<Fragment> = listOf(
@@ -34,15 +38,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setupViewModel()
         initViews()
         bindViewModel()
 
-    }
-
-
-    private fun setupViewModel() {
-        viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
     }
 
     private fun initViews() {
@@ -63,6 +61,14 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun bindViewModel() {
+
+        viewModel.listWeather.observe(this) {
+            when (it.status) {
+                NetworkEnum.SUCCESS -> println("Success")
+                NetworkEnum.LOADING -> println("loading")
+                NetworkEnum.ERROR -> println("error")
+            }
+        }
 
     }
 

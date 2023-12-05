@@ -1,4 +1,4 @@
-package com.example.privytest
+package com.example.privytest.Utils
 
 class Constant {
 

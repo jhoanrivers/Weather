@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.privytest.databinding.FragmentWeatherBinding
@@ -17,7 +18,7 @@ class SnowFragment : Fragment() {
 
 
 
-    lateinit var wViewModel: WeatherViewModel
+    private val wViewModel: WeatherViewModel by viewModels()
     lateinit var binding : FragmentWeatherBinding
     lateinit var weatherAdapter: WeatherAdapter
 
@@ -28,14 +29,9 @@ class SnowFragment : Fragment() {
         binding = FragmentWeatherBinding.inflate(inflater, container, false)
         weatherAdapter = WeatherAdapter(requireContext())
         val view = binding.root
-        initViewModel()
         bindViewModel()
         initView()
         return view
-    }
-
-    private fun initViewModel(){
-        wViewModel = ViewModelProvider(requireActivity())[WeatherViewModel::class.java]
     }
 
     private fun initView() {

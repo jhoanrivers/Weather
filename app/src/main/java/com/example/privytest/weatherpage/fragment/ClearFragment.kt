@@ -5,18 +5,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.privytest.databinding.FragmentWeatherBinding
 import com.example.privytest.weatherpage.WeatherViewModel
 import com.example.privytest.weatherpage.adapter.WeatherAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.FragmentScoped
 
 @AndroidEntryPoint
+@FragmentScoped
 class ClearFragment : Fragment() {
 
 
-    lateinit var viewModel: WeatherViewModel
+    private val viewModel: WeatherViewModel by viewModels()
     lateinit var binding: FragmentWeatherBinding
     lateinit var weatherAdapter: WeatherAdapter
 
@@ -29,7 +32,6 @@ class ClearFragment : Fragment() {
         weatherAdapter = WeatherAdapter(requireContext())
         val view = binding.root
 
-        initViewModel()
         bindViewModel()
         initView()
         return view
@@ -59,11 +61,6 @@ class ClearFragment : Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             itemAnimator = null
         }
-    }
-
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(requireActivity())[WeatherViewModel::class.java]
     }
 
 }

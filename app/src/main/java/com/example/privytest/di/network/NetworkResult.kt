@@ -1,14 +1,23 @@
 package com.example.privytest.di.network
 
-sealed class NetworkResult<T>(
-    val data: T? = null,
+import com.example.privytest.Utils.NetworkEnum
+
+data class NetworkResult<out T>(
+    val status: NetworkEnum,
+    val data: T?,
     val message: String ? = null
     ) {
 
-    class Success<T> (data: T) : NetworkResult<T>(data)
+    fun<T> onSuccess(data: T?) : NetworkResult<T> {
+        return NetworkResult(NetworkEnum.SUCCESS, data, null)
+    }
 
-    class Error<T>(message: String, data : T? = null) : NetworkResult<T>(data,message)
+    fun<T> onError(message: String, data: T?) : NetworkResult<T>{
+        return NetworkResult(NetworkEnum.ERROR, data, message)
+    }
 
-    class Loading<T>: NetworkResult<T>()
+    fun<T> onLoading(data: T?): NetworkResult<T>{
+        return NetworkResult(NetworkEnum.LOADING, data)
+    }
 
 }

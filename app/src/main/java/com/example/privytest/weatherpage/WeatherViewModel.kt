@@ -1,27 +1,21 @@
 package com.example.privytest.weatherpage
 
-import android.app.Application
 import android.content.SharedPreferences
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.privytest.Constant
-import com.example.privytest.WeatherApplication
+import com.example.privytest.Utils.Constant
 import com.example.privytest.di.network.NetworkResult
-import com.example.privytest.data.entity.WeatherEntity
 import com.example.privytest.data.entity.WeatherResponse
 import com.example.privytest.repository.Repository
 import com.example.privytest.weatherpage.model.WeatherModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 
 @HiltViewModel
-class WeatherViewModel @Inject constructor(
+public class WeatherViewModel @Inject constructor(
     private val repository: Repository,
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {

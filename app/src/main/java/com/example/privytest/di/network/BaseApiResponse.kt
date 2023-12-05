@@ -1,6 +1,7 @@
 package com.example.privytest.di.network
 
 import android.net.Network
+import com.example.privytest.Utils.NetworkEnum
 import retrofit2.Response
 
 open class BaseApiResponse {
@@ -12,16 +13,17 @@ open class BaseApiResponse {
             if(response.isSuccessful){
                 val body = response.body()
                 body?.let {
-                    return NetworkResult.Success(body)
+                    return NetworkResult(NetworkEnum.SUCCESS, body)
                 }
             }
-            return error("${response.code()} ${response.message()}")
+            return NetworkResult(NetworkEnum.ERROR, null, "${
+                response.code()} ${response.message()}")
         } catch (e: java.lang.Exception) {
-            return error(e.message ?: e.toString())
+            return NetworkResult(NetworkEnum.LOADING, null, null)
         }
     }
 
     private fun<T> error(errorMessage: String) : NetworkResult<T> =
-        NetworkResult.Error("Api call failed $errorMessage")
+        NetworkResult(NetworkEnum.ERROR, null, errorMessage)
 
 }
